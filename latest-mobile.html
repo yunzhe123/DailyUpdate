@@ -17,6 +17,81 @@
     return Number(v).toFixed(p);
   }
 
+  function symbolFromText(text){
+    if (!text) return '';
+    var t = text.replace(/（[^）]*）/g, '').trim();
+    return (t.split(/\s+/)[0] || '').trim();
+  }
+
+  var trendMap = {
+    '600900':'偏强震荡',
+    '000792':'强势上行',
+    '512880':'弱势下行',
+    '513130':'弱势下行',
+    '561360':'强势上行',
+    '159625':'强势上行',
+    '159326':'强势上行',
+    'QQQ':'区间震荡',
+    'VOO':'弱势下行',
+    'AAPL':'弱势下行',
+    'NVDA':'区间震荡',
+    'TSLA':'偏弱震荡',
+    'BTC':'偏强震荡'
+  };
+
+  var month3Map = {
+    '600900':'-3.10%',
+    '000792':'+49.69%',
+    '512880':'-3.70%',
+    '513130':'-12.91%',
+    '561360':'+40.42%',
+    '159625':'+15.00%',
+    '159326':'—',
+    'QQQ':'—',
+    'VOO':'—',
+    'AAPL':'—',
+    'NVDA':'—',
+    'TSLA':'—',
+    'BTC':'—'
+  };
+
+  function transformSummaryTables(){
+    var sections = document.querySelectorAll('.sec');
+    sections.forEach(function(sec){
+      var h2 = sec.querySelector('h2');
+      var table = sec.querySelector('table.table');
+      if (!h2 || !table) return;
+      if (!/总表/.test(h2.textContent || '')) return;
+
+      var headCells = table.querySelectorAll('thead th');
+      if (headCells.length >= 4) headCells[3].textContent = '3月';
+
+      table.querySelectorAll('tbody tr').forEach(function(tr){
+        var tds = tr.querySelectorAll('td');
+        if (tds.length < 4) return;
+        var sym = symbolFromText(tds[0].textContent || '');
+        var val = month3Map[sym] || '—';
+        tds[3].classList.remove('up', 'down');
+        tds[3].textContent = val;
+        if (/^\+/.test(val)) tds[3].classList.add('up');
+        if (/^-/.test(val)) tds[3].classList.add('down');
+      });
+    });
+  }
+
+  function injectTrendIntoTitle(){
+    var cards = document.querySelectorAll('.card');
+    cards.forEach(function(card){
+      var titleEl = card.querySelector('strong');
+      var trendEl = card.querySelector('.k.trend');
+      if (!titleEl || !trendEl) return;
+      var sym = symbolFromText(titleEl.textContent || '');
+      var trend = trendMap[sym];
+      if (!trend) return;
+      trendEl.textContent = '近期走势分析（' + trend + '）：';
+    });
+  }
+
   function injectTradePoints(){
     var cards = document.querySelectorAll('.card');
     cards.forEach(function(card){
@@ -92,7 +167,10 @@
     });
   }
 
+  transformSummaryTables();
+  injectTrendIntoTitle();
   injectTradePoints();
   boldNumbers();
 })();</script>
+
 </body></html>
