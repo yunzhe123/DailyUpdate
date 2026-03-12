@@ -55,6 +55,22 @@
     'BTC':'-23.11%'
   };
 
+  var priceMap = {
+    '600900':27.50,
+    '000792':38.26,
+    '512880':1.121,
+    '513130':0.637,
+    '561360':1.659,
+    '159625':1.412,
+    '159326':2.077,
+    'QQQ':607.69,
+    'VOO':622.03,
+    'AAPL':260.81,
+    'NVDA':186.03,
+    'TSLA':407.82,
+    'BTC':69477.03
+  };
+
   function transformSummaryTables(){
     var sections = document.querySelectorAll('.sec');
     sections.forEach(function(sec){
@@ -102,6 +118,8 @@
 
       var titleEl = card.querySelector('strong');
       var title = titleEl ? titleEl.textContent : '';
+      var sym = symbolFromText(title);
+      var current = priceMap[sym];
       var rows = Array.from(card.querySelectorAll('.row'));
       var intervalRow = rows.find(function(row){
         return /近期关键区间/.test(row.textContent || '');
@@ -122,13 +140,26 @@
       var isEtf = /ETF/i.test(title);
       var stopPoint = isEtf ? s * 0.992 : s * 0.99;
       var p = precisionByPrice(s);
+      var statusText = '当前状态：当前价缺失，无法判断';
+      if (typeof current === 'number' && !isNaN(current)) {
+        var reachBuild = current <= buyHigh;
+        var reachAdd = current >= addPoint;
+        var reachStop = current <= stopPoint;
+        statusText = '当前状态：'
+          + (reachBuild ? '到建仓点' : '未到建仓点')
+          + '，'
+          + (reachAdd ? '到加仓点' : '未到加仓点')
+          + '，'
+          + (reachStop ? '到止损点' : '未到止损点');
+      }
 
       var ops = document.createElement('div');
       ops.className = 'row ops';
       ops.innerHTML = [
         '<div class="op"><span class="op-label">建仓点：</span>' + fmt(buyLow, p) + ' - ' + fmt(buyHigh, p) + '</div>',
         '<div class="op"><span class="op-label">加仓点：</span>收盘站上 ' + fmt(addPoint, p) + '（放量确认）</div>',
-        '<div class="op"><span class="op-label">止损点：</span>' + fmt(stopPoint, p) + '</div>'
+        '<div class="op"><span class="op-label">止损点：</span>' + fmt(stopPoint, p) + '</div>',
+        '<div class="op"><span class="op-label">执行状态：</span>' + statusText + '</div>'
       ].join('');
 
       card.appendChild(ops);
