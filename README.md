@@ -5,7 +5,7 @@ This repo hosts the mobile stock brief for GitHub Pages.
 ## URL
 After GitHub Pages is enabled, open:
 
-https://yunzheli.github.io/stock-brief-pages/latest-mobile.html
+https://yunzhe123.github.io/DailyUpdate/latest-mobile.html
 
 ## Update workflow
 From local workspace:
