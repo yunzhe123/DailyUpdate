@@ -47,12 +47,12 @@
     '561360':'+40.42%',
     '159625':'+15.00%',
     '159326':'—',
-    'QQQ':'—',
-    'VOO':'—',
-    'AAPL':'—',
-    'NVDA':'—',
-    'TSLA':'—',
-    'BTC':'—'
+    'QQQ':'-2.86%',
+    'VOO':'-1.84%',
+    'AAPL':'-6.19%',
+    'NVDA':'+2.82%',
+    'TSLA':'-8.74%',
+    'BTC':'-23.11%'
   };
 
   function transformSummaryTables(){
@@ -123,7 +123,7 @@
       var ops = document.createElement('div');
       ops.className = 'row ops';
       ops.innerHTML = [
-        '<div class="op"><span class="op-label">买点：</span>' + fmt(buyLow, p) + ' - ' + fmt(buyHigh, p) + '</div>',
+        '<div class="op"><span class="op-label">建仓点：</span>' + fmt(buyLow, p) + ' - ' + fmt(buyHigh, p) + '</div>',
         '<div class="op"><span class="op-label">加仓点：</span>收盘站上 ' + fmt(addPoint, p) + '（放量确认）</div>',
         '<div class="op"><span class="op-label">止损点：</span>' + fmt(stopPoint, p) + '</div>'
       ].join('');
